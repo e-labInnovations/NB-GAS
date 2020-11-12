@@ -26,7 +26,7 @@ class areas {
   create(data) {
     let result = {};
     if(!("name" in data)) {
-      result = { status: 'error', error: 'name is missing'};
+      result = getError('name is missing');
       return result;
     }
     
@@ -45,7 +45,7 @@ class areas {
   changeName(data) {
     let result = {};
     if(!("areaId" in data) || !("name" in data)) {
-      result = { status: 'error', error: 'areaId or name is missing'};
+      result = getError('areaId or name is missing');
       return result;
     }
     
@@ -60,7 +60,7 @@ class areas {
       result = { status: 'success', data: 'Name updated'};
       return result;
     } else {
-      result = { status: 'error', error: 'Only owner can edit an Area'};
+      result = getError('Only owner can edit an Area');
       return result;
     }
   }
@@ -69,7 +69,7 @@ class areas {
   delete(data) {
     let result = {};
     if(!("areaId" in data)) {
-      result = { status: 'error', error: 'areaId is missing'};
+      result = getError('areaId is missing');
       return result;
     }
     
@@ -82,7 +82,7 @@ class areas {
       result = { status: 'success', data: 'Area deleted'};
       return result;
     } else {
-      result = { status: 'error', error: 'Only owner can delete an Area'};
+      result = getError('Only owner can delete an Area');
       return result;
     }
   }
@@ -91,7 +91,7 @@ class areas {
   getAreaById(data) {
     let result = {};
     if(!("areaId" in data)) {
-      result = { status: 'error', error: 'areaId is missing'};
+      result = getError('areaId is missing');
       return result;
     }
     
@@ -145,7 +145,7 @@ class areas {
   getMembersByAreaId(data) {
     let result = {};
     if(!("areaId" in data)) {
-      result = { status: 'error', error: 'areaId is missing'};
+      result = getError('areaId is missing');
       return result;
     }
     
@@ -202,7 +202,7 @@ class areas {
   joinArea(data) {
     let result = {}
     if(!("areaId" in data)) {
-      result = { status: 'error', error: 'areaId is missing'};
+      result = getError('areaId is missing');
       return result;
     }
     
@@ -213,7 +213,7 @@ class areas {
     let allAreas = this.getAreasByUser(data).data;
     for(var i = 0; i<allAreas.length; i++){
       if(allAreas[i].areaId == areaId){
-        result = { status: 'error', error: 'You are already joined before'};
+        result = getError('You are already joined before');
         return result;
       }
     }
@@ -226,7 +226,7 @@ class areas {
       this.amSheet.appendRow([joinId, userId, areaId, role, joinDate]);
       return this.getAreasByUser({userId: userId});
     } else {
-      result = { status: 'error', error: `The Area with the areaId "${areaObj.areaId}"  not accept new joins`};
+      result = getError(`The Area with the areaId "${areaObj.areaId}"  not accept new joins`);
       return result
     }
   }
@@ -235,7 +235,7 @@ class areas {
   changeMemberRole(data) {
     let result = {};
     if(!("joinId" in data) || !("role" in data)) {
-      result = { status: 'error', error: 'joinId or role is missing'};
+      result = getError('joinId or role is missing');
       return result;
     }
     
@@ -254,12 +254,12 @@ class areas {
           this.amSheet.getRange(row, 4).setValue(role);
           return this.getMembersByAreaId({areaId:membersArrayData[i][2]});
         } else {
-          result = { status: 'error', error: `You are not the owner of the Area with the areaId "${areaObj.areaId}"`};
+          result = getError(`You are not the owner of the Area with the areaId "${areaObj.areaId}"`);
           return result;
         }
 	  }
     }
-    result = { status: 'error', error: `The Member with the joinId "${joinId}" not exist`};
+    result = getError(`The Member with the joinId "${joinId}" not exist`);
     return result;
     
   }
@@ -290,20 +290,6 @@ const getOrCreateUserFolder = (childFolderName) => {
     childFolder = userMainFolder.createFolder(childFolderName);
   }
   return childFolder;
-}
-
-const getRowById = (sheet, id, col) => {
-	var lr= sheet.getLastRow();
-	var lc= sheet.getLastColumn();
-	var row = null;
-	
-	for(var i = 1;i<=lr; i++){
-    	var rid = sheet.getRange(i,col).getValue();
-    	if(rid == id ){
-			row = i;
-		}
-	}
-	return row;
 }
 
 const test = () => {
